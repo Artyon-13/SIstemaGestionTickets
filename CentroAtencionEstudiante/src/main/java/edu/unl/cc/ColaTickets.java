@@ -1,0 +1,43 @@
+package edu.unl.cc;
+
+public class ColaTickets {
+    private NodoCola frente;
+    private NodoCola fin;
+
+    public boolean esVacia() {
+        return frente == null;
+    }
+    public void insertar(Ticket ticket) {
+        NodoCola nuevo = new NodoCola(ticket);
+        if (esVacia()) {
+            frente = nuevo;
+            fin = nuevo;
+        } else {
+            fin.siguiente = nuevo;
+            fin = nuevo;
+        }
+    }
+
+    public Ticket sacar() {
+        if (esVacia()) return null;
+        Ticket ticket = frente.ticket;
+        frente = frente.siguiente;
+        if  (frente == null) fin = null;
+        return ticket;
+    }
+
+    public void listar (){
+        if (esVacia()) {
+            System.out.println("No exixten tickets en espera");
+            return;
+        }
+
+        NodoCola actual = frente;
+        System.out.println("Tickets en espera:");
+        while (actual != null){
+            actual.ticket.mostrarInfo();
+            actual = actual.siguiente;
+        }
+    }
+}
+
