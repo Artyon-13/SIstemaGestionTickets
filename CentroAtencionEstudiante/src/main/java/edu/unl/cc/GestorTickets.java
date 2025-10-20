@@ -14,8 +14,9 @@ public class GestorTickets {
 
     public void menu(){
         int opcion;
-
+           
         do {
+            //Interfaz del Usuario principal 
             System.out.println("-----Modulo de Atencion CAE----");
             System.out.println("1. Nuevo Ticket");
             System.out.println("2. Atender siguiente");
@@ -66,7 +67,7 @@ public class GestorTickets {
             System.out.println("Ya hay un ticket en atencion");
             return;
         }
-        //Sacamos el ticket de la cola y verificamos que este vacio
+        //Saca el ticket siguinte de la cola FIFO
         enAtencion = cola.sacar();
         if (enAtencion == null) {
             System.out.println("No hay tickets en espera...");
@@ -86,8 +87,8 @@ public class GestorTickets {
         System.out.print("Ingrese una nota: ");
         String texto = scanner.nextLine();
         enAtencion.notas.insertarInicio(texto);
-        undo.push("Agrego nota: " + texto);
-        redo.limpiar();
+        undo.push("Agrego nota: " + texto); //Guarda accion  para deshacer 
+        redo.limpiar(); //Limpia redo al hacer una nueva accion 
         System.out.println("Nota agregada correctamente");
     }
     private void eliminarNota() {
@@ -110,15 +111,17 @@ public class GestorTickets {
             System.out.println("No hay ticket en atencion");
             return;
         }
-        String accion = undo.pop();
+        
+        String accion = undo.pop(); // Obtiene la ulma accion 
         if (accion == null) {
             System.out.println("No hay acciones para deshacer");
             return;
         }
+        // Logica para revertir la  accion 
         if (accion.startsWith("Agrego nota: ")) {
             String texto = accion.substring(13);
             enAtencion.notas.eliminar(texto);
-            redo.push("Agrego nota: " + texto);
+            redo.push("Agrego nota: " + texto); // Prepara para rehacer 
             System.out.println("Se deshizo correctamente la adicion de la nota");
         } else if (accion.startsWith("Eliminar: ")) {
             String texto = accion.substring(4);
@@ -133,11 +136,12 @@ public class GestorTickets {
             System.out.println("No hay ticket en atencion");
             return;
         }
-        String accion = redo.pop();
+        String accion = redo.pop(); //Obtiene la accion para rehacer
         if (accion == null){
             System.out.println("No hay acciones para rehacer");
             return;
         }
+        // Re-ejecuta la acción previamente deshecha
         if (accion.startsWith("Agrego nota: ")) {
             String texto = accion.substring(4);
             enAtencion.notas.insertarInicio(texto);
@@ -161,8 +165,8 @@ public class GestorTickets {
        enAtencion.mostrarInfo();
        System.out.println("Notas registradas:");
        enAtencion.notas.listar();
-       enAtencion = null;
-       undo.limpiar();
+       enAtencion = null; //Libera el tikect actual 
+       undo.limpiar(); //Limpia pilas de acciones 
        redo.limpiar();
     }
 
@@ -183,6 +187,7 @@ public class GestorTickets {
         System.out.print("Numero de ticket para mas detalles: ");
         int numeroTicket = scanner.nextInt();
         scanner.nextLine();
+        // Busca de forma lineal en el historial 
         for (Ticket ticket : historial) {
             if (ticket.id == numeroTicket) {
                 ticket.mostrarInfo();
@@ -195,4 +200,5 @@ public class GestorTickets {
     }
 
 }
+
 
