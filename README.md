@@ -1,11 +1,7 @@
 # SIstemaGestionTickets
 
 Este proyecto implementa el módulo de gestión de tickets para el Centro de Atención al Estudiante (CAE), permitiendo la recepción, atención y finalización de trámites (certificados, constancias, homologaciones, etc.).
-El módulo garantiza un flujo de trabajo organizado con funcionalidades de deshacer/rehacer y un historial de observaciones por ticket.
-
-
-#a) Decisiones de Diseño y Arquitectura
-El diseño se basa en una estricta **separación entre la lógica de dominio (objetos, estados) y la interacción (Entrada/Salida)**[cite: 26]. [cite\_start]Se cumple la restricción de implementar las estructuras de datos propias (nodos/enlaces) sin usar las colecciones estándar de Java como solución principal[cite: 24, 25].
+El módulo garantiza un flujo de trabajo organizado con funcionalidades de deshacer/rehacer y un historial de observaciones por ticket y se basa en una estricta separación entre la lógica de dominio y la interacción con los datos de entrada y salida. 
 
 ### [cite\_start]Estructuras de Datos Propias Requeridas [cite: 18]
 
