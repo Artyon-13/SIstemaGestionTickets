@@ -12,7 +12,7 @@ Se registran en la pila los **estados significativos** del caso, así como las a
   * Eliminar Nota
   * Cambio de Estado
 
-## II. Catálogo de Estados del Caso del Ticket
+## II.Estados del Caso del Ticket
 
 El estado de cada ticket es fundamental para el seguimiento:
 
@@ -30,7 +30,7 @@ El estado de cada ticket es fundamental para el seguimiento:
 
 Se ha priorizado el manejo de las siguientes situaciones para garantizar la solidez del sistema.
 
-  * **Estructuras Vacias:** Manejo seguro al intentar atender un caso cuando la cola (`TicketQueue`) está vacía.
+  * **Estructuras Vacias:** Manejo seguro al intentar atender un caso cuando la cola está vacía.
   * **Undo/Redo en Vacio:** Prevenir errores al intentar deshacer/rehacer sin que existan acciones previas registradas en las pilas.
   * **Eliminacion de Notas Inexistentes:** Gestion de referencias seguras al intentar eliminar una nota que no se encuentre.
   * **Integridad Post-Finalización:** Asegurar que los casos en estado **COMPLETADO** no puedan ser alterados por nuevas acciones o por la funcionalidad de "Undo/Redo".
