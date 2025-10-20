@@ -8,7 +8,8 @@ public class ListaNotas {
         nueva.siguiente = cabeza;
         cabeza = nueva;
     }
-
+    
+//Si la cabeza de la nota esta vacia retorna falso
     public boolean eliminar(String texto){
         if(cabeza == null) return false;
         if (cabeza.texto.equals(texto)) {
@@ -40,3 +41,4 @@ public class ListaNotas {
         }
     }
 }
+
