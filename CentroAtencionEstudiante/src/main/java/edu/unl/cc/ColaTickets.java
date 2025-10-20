@@ -1,5 +1,5 @@
 package edu.unl.cc;
-
+// Cola de tickets implementada con lista enlazada para insertar, sacar, verificar y listar tickets
 public class ColaTickets {
     private NodoCola frente;
     private NodoCola fin;
@@ -40,4 +40,5 @@ public class ColaTickets {
         }
     }
 }
+
 
