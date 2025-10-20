@@ -12,14 +12,16 @@ Se registran en la pila los **estados significativos** del caso, así como las a
   * Eliminar Nota
   * Cambio de Estado
 
-## II. Catálogo de Estados del Caso (Ticket)
+## II. Catálogo de Estados del Caso del Ticket
 
 El estado de cada ticket es fundamental para el seguimiento:
 
 | Estado | Descripción |
 | :--- | :--- |
-| **EN COLA** | Recepción inicial: El ticket está en la estructura de espera. |
-| **EN ATENCIÓN** | Un agente está trabajando activamente en el caso.Permite registro de observaciones y cambios. |
+| **EN COLA** | Recepción inicial.
+El ticket está en la estructura de espera. |
+| **EN ATENCIÓN** | Un agente está trabajando activamente en el caso.
+Permite registro de observaciones y cambios. |
 | **EN PROCESO** | La resolución requiere acciones internas fuera del alcance inmediato del sistema. |
 | **PENDIENTE DOCS** | La resolución está en pausa, esperando la entrega de documentación por parte del estudiante. |
 | **COMPLETADO** | El trámite ha sido finalizado. |
