@@ -66,6 +66,7 @@ public class GestorTickets {
             System.out.println("Ya hay un ticket en atencion");
             return;
         }
+        //Sacamos el ticket de la cola y verificamos que este vacio
         enAtencion = cola.sacar();
         if (enAtencion == null) {
             System.out.println("No hay tickets en espera...");
@@ -194,3 +195,4 @@ public class GestorTickets {
     }
 
 }
+
