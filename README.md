@@ -18,10 +18,8 @@ El estado de cada ticket es fundamental para el seguimiento:
 
 | Estado | Descripción |
 | :--- | :--- |
-| **EN COLA** | Recepción inicial.
-El ticket está en la estructura de espera. |
-| **EN ATENCIÓN** | Un agente está trabajando activamente en el caso.
-Permite registro de observaciones y cambios. |
+| **EN COLA** | El ticket está en la estructura de espera. |
+| **EN ATENCIÓN** | Un agente está trabajando activamente en el caso.|
 | **EN PROCESO** | La resolución requiere acciones internas fuera del alcance inmediato del sistema. |
 | **PENDIENTE DOCS** | La resolución está en pausa, esperando la entrega de documentación por parte del estudiante. |
 | **COMPLETADO** | El trámite ha sido finalizado. |
