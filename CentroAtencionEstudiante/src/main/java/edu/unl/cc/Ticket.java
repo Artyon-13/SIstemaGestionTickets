@@ -15,9 +15,10 @@ public class Ticket {
         this.notas = new ListaNotas();
 
     }
-
+//Creamos un constructor y un metodo para que muestre la informacion
     public void mostrarInfo() {
         System.out.println("Ticket #" + id + "|" + estudiante + "|" + tipoTramite + "| Estado: " + estado);
     }
 
 }
+
