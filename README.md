@@ -1,3 +1,85 @@
 # SIstemaGestionTickets
-Sistema para gestion de tickets por turnos guardando el historial de todo los tickets creados
-Proyecto: Centro de Atención al Estudiante (CAE) - Módulo de ConsolaEste proyecto implementa el módulo de gestión de tickets para el Centro de Atención al Estudiante (CAE), utilizando estructuras de datos propias para gestionar la cola de espera, el historial de acciones (undo/redo) y las notas por ticket.I. Decisiones de DiseñoEl diseño se basa en una clara separación de la lógica de dominio (modelos) y la interacción (capa de E/S) 1 para asegurar un código limpio, legible y modular.1. Estructuras de Datos PropiasSe implementaron las siguientes estructuras con nodos y referencias2:EstructuraPropósitoRegla de OperaciónCola de Tickets (TicketQueue)Almacena y gestiona los casos en espera3.FIFO (First-In, First-Out) 4Pila de Acciones (ActionStack)Registra las acciones realizadas durante la atención de un caso para la funcionalidad Undo/Redo55.LIFO (Last-In, First-Out) 6Lista Enlazada Simple de Notas (NoteSinglyLinkedList)Almacena el historial de observaciones (notas) de un ticket específico7.Inserción al inicio y Eliminación por primera coincidencia88.2. Integridad del SistemaPara garantizar la integridad de los datos, las acciones de Undo/Redo solo afectan el estado y las notas del ticket actualmente en atención9. Al finalizar un caso, su historial de notas y estado se conservan y se hacen inmutables para consulta posterior1010.II. Catálogo de Estados de TicketEl Ticket objeto tiene un atributo de estado que registra su progreso.EstadoDescripciónReglas de TransiciónEN COLAEstado inicial. El ticket espera ser atendido11.$\to$ EN ATENCIÓNEN ATENCIÓNUn agente ha tomado el ticket y está registrando acciones (notas, cambios de estado)12.$\to$ EN PROCESO / PENDIENTE DOCS / COMPLETADOEN PROCESOLa atención inicial ha terminado, pero requiere seguimiento interno (p. ej., derivación a otra unidad).$\to$ EN ATENCIÓN (para reabrir) / COMPLETADOPENDIENTE DOCSLa resolución está suspendida, esperando que el estudiante entregue documentos o información adicional.$\to$ EN ATENCIÓN (al recibir docs) / COMPLETADOCOMPLETADOEl trámite ha finalizado y el ticket se ha cerrado. Su historial es consultable13.FINAL (no se puede modificar ni deshacer) 14III. Manejo de Casos Borde (Robustez)Se han considerado los siguientes escenarios extremos para garantizar la estabilidad del sistema1515:Estructuras Vacías: Intentar atender un caso o consultar la cola cuando la TicketQueue está vacía.Undo/Redo sin acciones previas: Intentar deshacer o rehacer cuando las pilas (ActionStack) están vacías16.Eliminación de notas inexistentes: Intentar borrar una nota de la NoteSinglyLinkedList con un identificador o coincidencia que no existe17171717.Cambio de estado sin caso en atención: Intentar modificar un ticket cuando la sesión de atención está vacía18.Corrupción de Historial: Asegurar que, al finalizar un caso, su historial de notas se preserva y no es afectado por operaciones de Undo/Redo posteriores19.IV. Guía de EjecuciónEl proyecto debe ejecutarse a través de la clase principal en la capa de interacción (MainConsole o similar).Compilación: Compilar todos los archivos .java (clases de dominio, estructuras, e interacción).Ejecución: Ejecutar la clase principal.Flujo de Trabajo:Recepción: Ingresar nuevos tickets (entran a la cola)20.Atención: Iniciar la atención del primer ticket en la cola (pasa a estado EN ATENCIÓN).Registro: Durante la atención, añadir notas y cambiar el estado. Estas acciones se registran en las pilas de Undo/Redo21.Control: Probar Undo (deshacer la última acción) y Redo (rehacer la acción deshecha)22.Consulta: Listar la cola de espera y consultar el historial (notas y estado) de casos COMPLETADOS23.
+
+Este proyecto implementa el módulo de gestión de tickets para el Centro de Atención al Estudiante (CAE), permitiendo la recepción, atención y finalización de trámites (certificados, constancias, homologaciones, etc.).
+El módulo garantiza un flujo de trabajo organizado con funcionalidades de deshacer/rehacer y un historial de observaciones por ticket.
+
+
+#a) Decisiones de Diseño y Arquitectura
+El diseño se basa en una estricta **separación entre la lógica de dominio (objetos, estados) y la interacción (Entrada/Salida)**[cite: 26]. [cite\_start]Se cumple la restricción de implementar las estructuras de datos propias (nodos/enlaces) sin usar las colecciones estándar de Java como solución principal[cite: 24, 25].
+
+### [cite\_start]Estructuras de Datos Propias Requeridas [cite: 18]
+
+| Estructura | Nombre de la Clase (Ejemplo) | Propósito y Regla |
+| :--- | :--- | :--- |
+| **Cola (Queue)** | `TicketQueue` | [cite\_start]Almacena y gestiona los **casos en espera**[cite: 19]. [cite\_start]**FIFO (First-In, First-Out)**[cite: 19]. |
+| **Pila (Stack)** | `ActionStack` (para Undo) / `RedoStack` (para Redo) | [cite\_start]Registra acciones para la funcionalidad **Deshacer/Rehacer**[cite: 20]. **LIFO (Last-In, First-Out)**. |
+| **Lista Enlazada Simple (SLL)** | `NoteSinglyLinkedList` | [cite\_start]Almacena el **historial de notas y observaciones** asociadas a un ticket[cite: 21]. [cite\_start]Permite inserción al inicio y eliminación por primera coincidencia[cite: 21]. |
+
+### Acciones Registrables para Undo/Redo
+
+[cite\_start]Se registran en la pila los **estados significativos** del caso [cite: 28][cite\_start], así como las acciones mínimas necesarias para un deshacer/rehacer significativo[cite: 46]:
+
+  * [cite\_start]Añadir Nota[cite: 47].
+  * [cite\_start]Eliminar Nota[cite: 47].
+  * [cite\_start]Cambio de Estado[cite: 47].
+
+-----
+
+## II. Catálogo de Estados del Caso (Ticket)
+
+[cite\_start]El estado de cada ticket es fundamental para el seguimiento[cite: 28]:
+
+| Estado | Descripción |
+| :--- | :--- |
+| **EN COLA** | Recepción inicial. [cite\_start]El ticket está en la estructura de espera[cite: 13]. |
+| **EN ATENCIÓN** | [cite\_start]Un agente está trabajando activamente en el caso[cite: 14]. [cite\_start]Permite registro de observaciones y cambios[cite: 14, 15]. |
+| **EN PROCESO** | La resolución requiere acciones internas fuera del alcance inmediato del agente (p. ej., derivación). |
+| **PENDIENTE DOCS** | La resolución está en pausa, esperando la entrega de documentación por parte del estudiante. |
+| **COMPLETADO** | El trámite ha sido finalizado. [cite\_start]El historial del caso se conserva para consulta posterior[cite: 16, 29]. |
+
+-----
+
+## III. Casos Borde y Manejo de Errores
+
+[cite\_start]Se ha priorizado el manejo de las siguientes situaciones para garantizar la robustez del sistema[cite: 27]:
+
+  * **Estructuras Vacías:** Manejo seguro al intentar atender un caso cuando la cola (`TicketQueue`) está vacía.
+  * [cite\_start]**Undo/Redo en Vacío:** Prevenir errores al intentar deshacer/rehacer sin que existan acciones previas registradas en las pilas[cite: 27].
+  * [cite\_start]**Eliminación de Notas Inexistentes:** Gestión de referencias segura al intentar eliminar una nota que no se encuentra en la `NoteSinglyLinkedList`[cite: 27, 43].
+  * [cite\_start]**Integridad Post-Finalización:** Asegurar que los casos en estado **COMPLETADO** no puedan ser alterados por nuevas acciones o por la funcionalidad de `Undo/Redo`[cite: 29].
+  * [cite\_start]**Cambio de Estado Sin Atención:** Evitar cambios de estado si no hay un caso activo siendo atendido por el agente[cite: 27].
+
+-----
+
+## IV. Guía de Compilación y Ejecución
+
+[cite\_start]El proyecto fue desarrollado utilizando la biblioteca estándar de Java[cite: 48].
+
+### 1\. Requisitos
+
+  * Java Development Kit (JDK) 17 o superior.
+
+### 2\. Ejecución
+
+1.  **Compilar** las clases fuente (`.java`).
+2.  **Ejecutar** la clase principal (por ejemplo, `MainConsole.java`).
+    ```bash
+    java MainConsole
+    ```
+
+### [cite\_start]3. Escenarios de Prueba (Evidencias) [cite: 36]
+
+Para verificar el cumplimiento de los requerimientos, ejecute los siguientes pasos y tome capturas de la salida de consola:
+
+1.  **Prueba de la Cola (FIFO):**
+      * Registrar 3-5 nuevos casos.
+      * Consultar la lista de casos en espera para mostrar el orden de llegada (Evidencia **a**).
+2.  **Prueba de Historial y Estado Final:**
+      * Atender 2 casos de forma completa, asegurando que pasen al estado **COMPLETADO**.
+      * Registrar múltiples notas para cada uno.
+      * Consultar el historial (notas y estado final) de ambos casos (Evidencia **b**).
+3.  **Prueba de Undo/Redo:**
+      * Atender un caso.
+      * Realizar varias acciones consecutivas (ej. Añadir Nota $\to$ Cambiar Estado $\to$ Eliminar Nota).
+      * Usar `Undo` (deshacer) para revertir las acciones.
+      * Usar `Redo` (rehacer) para restaurar las acciones deshechas (Evidencia **c**).
