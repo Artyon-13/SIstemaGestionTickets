@@ -1,5 +1,9 @@
 package edu.unl.cc;
-
+/**
+ Implementa una pila de acciones mediante una lista enlazada, 
+ con operaciones para agregar (push), retirar (pop), verificar si está vacía 
+ y limpiar la pila.
+ */
 public class PilaAcciones {
     private NodoAccion tope;
 
@@ -23,3 +27,4 @@ public class PilaAcciones {
         tope = null;
     }
 }
+
