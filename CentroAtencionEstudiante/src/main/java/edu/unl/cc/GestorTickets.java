@@ -124,7 +124,7 @@ public class GestorTickets {
             redo.push("Agrego nota: " + texto); // Prepara para rehacer 
             System.out.println("Se deshizo correctamente la adicion de la nota");
         } else if (accion.startsWith("Eliminar: ")) {
-            String texto = accion.substring(4);
+            String texto = accion.substring(13);
             enAtencion.notas.insertarInicio(texto);
             redo.push("Elimino nota: " + texto);
             System.out.println("Se deshizo correctamente la eliminacion de la nota");
@@ -143,12 +143,12 @@ public class GestorTickets {
         }
         // Re-ejecuta la acción previamente deshecha
         if (accion.startsWith("Agrego nota: ")) {
-            String texto = accion.substring(4);
+            String texto = accion.substring(13);
             enAtencion.notas.insertarInicio(texto);
             undo.push("Agrego nota: " + texto);
             System.out.println("Se rehicieron correctamente los cambios de la nota");
         } else if (accion.startsWith("Eliminar: ")) {
-            String texto = accion.substring(4);
+            String texto = accion.substring(13);
             enAtencion.notas.eliminar(texto);
             undo.push("Elimino nota: " + texto);
             System.out.println("Se rehizo correctamente la eliminacion de la nota");
@@ -200,5 +200,6 @@ public class GestorTickets {
     }
 
 }
+
 
 
