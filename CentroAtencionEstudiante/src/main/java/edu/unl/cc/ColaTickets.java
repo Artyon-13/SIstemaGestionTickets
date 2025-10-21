@@ -3,7 +3,6 @@ package edu.unl.cc;
 public class ColaTickets {
     private NodoCola frente;
     private NodoCola fin;
-
     public boolean esVacia() {
         return frente == null;
     }
@@ -28,12 +27,16 @@ public class ColaTickets {
 
     public void listar (){
         if (esVacia()) {
-            System.out.println("No exixten tickets en espera");
+            System.out.println("----------------------------------");
+            System.out.println("No existen tickets en espera");
+            System.out.println("----------------------------------");
             return;
         }
 
         NodoCola actual = frente;
+        System.out.println("----------------------------------");
         System.out.println("Tickets en espera:");
+        System.out.println("----------------------------------");
         while (actual != null){
             actual.ticket.mostrarInfo();
             actual = actual.siguiente;

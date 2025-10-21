@@ -4,6 +4,13 @@ import java.util.List;
 import java.util.Scanner;
 
 public class GestorTickets {
+    public static final String RESET = "\u001B[0m";
+    public static final String RED = "\u001B[31m";
+    public static final String GREEN = "\u001B[32m";
+    public static final String YELLOW = "\u001B[33m";
+    public static final String BLUE = "\u001B[34m";
+    public static final String PURPLE = "\u001B[35m";
+    public static final String CYAN = "\u001B[36m";
     private ColaTickets cola = new ColaTickets();
     private PilaAcciones undo = new PilaAcciones();
     private PilaAcciones redo = new PilaAcciones();
@@ -16,8 +23,9 @@ public class GestorTickets {
         int opcion;
            
         do {
-            //Interfaz del Usuario principal 
-            System.out.println("-----Modulo de Atencion CAE----");
+            //Interfaz del Usuario principal
+            System.out.println("*************************************************");
+            System.out.println(PURPLE + "-----Modulo de Atencion CAE----" + RESET);
             System.out.println("1. Nuevo Ticket");
             System.out.println("2. Atender siguiente");
             System.out.println("3. Agregar Nota");
@@ -52,63 +60,71 @@ public class GestorTickets {
     }
 
     private void insertarTicket() {
-        System.out.print("Nombre del estudiante: ");
+        System.out.println("\n===================================================");
+        System.out.print(GREEN +"Nombre del estudiante: "+ RESET);
         String nombre = scanner.nextLine();
-        System.out.print("Tipo de Tramite: ");
+        System.out.println("\n===================================================");
+        System.out.print(GREEN +"Tipo de Tramite: " + RESET);
         String tipoTramite = scanner.nextLine();
+        System.out.println("\n===================================================");
         Ticket ticket = new Ticket(id++, nombre, tipoTramite);
         cola.insertar(ticket);
-        System.out.println("Ticket #" + ticket.id + " agregado correctamente");
+        System.out.println(CYAN +"Ticket #" + ticket.id + " agregado correctamente" + RESET);
         historial.add(ticket);
     }
 
     private void atenderTicket() {
+        System.out.println("\n:::::::::::::::::::::::::::::::::::::::::::::::::::");
         if (enAtencion != null) {
-            System.out.println("Ya hay un ticket en atencion");
+            System.out.println(CYAN +"Ya hay un ticket en atencion"+ RESET);
             return;
         }
         //Saca el ticket siguinte de la cola FIFO
         enAtencion = cola.sacar();
         if (enAtencion == null) {
-            System.out.println("No hay tickets en espera...");
+            System.out.println(CYAN +"No hay tickets en espera..."+ RESET);
             return;
         }
         enAtencion.estado = EstadoTicket.En_Atencion;
         undo.limpiar();
         redo.limpiar();
-        System.out.println("Atendiendo ticket:");
+        System.out.println(CYAN + "Atendiendo ticket:" + RESET);
         enAtencion.mostrarInfo();
     }
     private void agregarNota() {
+        System.out.println("\n:::::::::::::::::::::::::::::::::::::::::::::::::::");
         if (enAtencion == null) {
-            System.out.println("No hay ticket en atencion");
+            System.out.println(CYAN +"No hay ticket en atencion"+ RESET);
             return;
         }
-        System.out.print("Ingrese una nota: ");
+        System.out.print(BLUE +"Ingrese una nota: "+ RESET);
         String texto = scanner.nextLine();
         enAtencion.notas.insertarInicio(texto);
         undo.push("Agrego nota: " + texto); //Guarda accion  para deshacer 
         redo.limpiar(); //Limpia redo al hacer una nueva accion 
-        System.out.println("Nota agregada correctamente");
+        System.out.println(BLUE +"Nota agregada correctamente"+ RESET);
     }
     private void eliminarNota() {
+        System.out.println("\n:::::::::::::::::::::::::::::::::::::::::::::::::::");
         if (enAtencion == null) {
-            System.out.println("No hay ticket en atencion");
+            System.out.println(CYAN +"No hay ticket en atencion"+ RESET);
             return;
         }
         System.out.print("Ingrese una nota a eliminar: ");
         String texto = scanner.nextLine();
+        System.out.print("\n");
         if (enAtencion.notas.eliminar(texto)) {
-            undo.push("Elimino nota: " + texto);
+            undo.push(BLUE +"Elimino nota: " + texto + RESET);
             redo.limpiar();
-            System.out.println("Nota eliminada correctamente");
+            System.out.println(BLUE +"Nota eliminada correctamente"+ RESET);
         } else {
-            System.out.println("Nota no encontrada");
+            System.out.println(BLUE +"Nota no encontrada"+ RESET);
         }
     }
     private void deshacer() {
+        System.out.println("\n:::::::::::::::::::::::::::::::::::::::::::::::::::");
         if (enAtencion == null) {
-            System.out.println("No hay ticket en atencion");
+            System.out.println(CYAN +"No hay ticket en atencion"+ RESET);
             return;
         }
         
@@ -121,19 +137,20 @@ public class GestorTickets {
         if (accion.startsWith("Agrego nota: ")) {
             String texto = accion.substring(13);
             enAtencion.notas.eliminar(texto);
-            redo.push("Agrego nota: " + texto); // Prepara para rehacer 
-            System.out.println("Se deshizo correctamente la adicion de la nota");
+            redo.push("Agrego nota: " + texto); // Prepara para rehacer
+            System.out.println(BLUE +"Se deshizo correctamente la adicion de la nota"+ RESET);
         } else if (accion.startsWith("Eliminar: ")) {
             String texto = accion.substring(4);
             enAtencion.notas.insertarInicio(texto);
             redo.push("Elimino nota: " + texto);
-            System.out.println("Se deshizo correctamente la eliminacion de la nota");
+            System.out.println(BLUE +"Se deshizo correctamente la eliminacion de la nota"+ RESET);
         }
     }
 
     public void rehacer (){
+        System.out.println("\n:::::::::::::::::::::::::::::::::::::::::::::::::::");
         if (enAtencion == null) {
-            System.out.println("No hay ticket en atencion");
+            System.out.println(CYAN +"No hay ticket en atencion"+ RESET);
             return;
         }
         String accion = redo.pop(); //Obtiene la accion para rehacer
@@ -146,24 +163,25 @@ public class GestorTickets {
             String texto = accion.substring(4);
             enAtencion.notas.insertarInicio(texto);
             undo.push("Agrego nota: " + texto);
-            System.out.println("Se rehicieron correctamente los cambios de la nota");
+            System.out.println(BLUE +"Se rehicieron correctamente los cambios de la nota"+ RESET);
         } else if (accion.startsWith("Eliminar: ")) {
             String texto = accion.substring(4);
             enAtencion.notas.eliminar(texto);
             undo.push("Elimino nota: " + texto);
-            System.out.println("Se rehizo correctamente la eliminacion de la nota");
+            System.out.println(BLUE +"Se rehizo correctamente la eliminacion de la nota"+ RESET);
         }
     }
 
     private void finalizarAtencion() {
+        System.out.println("\n:::::::::::::::::::::::::::::::::::::::::::::::::::");
         if (enAtencion == null) {
             System.out.println("No hay ticket en atencion");
             return;
         }
        enAtencion.estado = EstadoTicket.Completado;
-       System.out.println("Ticket finalizado correctamente");
+       System.out.println(CYAN +"Ticket finalizado correctamente"+ RESET);
        enAtencion.mostrarInfo();
-       System.out.println("Notas registradas:");
+       System.out.println(BLUE +"Notas registradas:"+ RESET);
        enAtencion.notas.listar();
        enAtencion = null; //Libera el tikect actual 
        undo.limpiar(); //Limpia pilas de acciones 
@@ -171,8 +189,9 @@ public class GestorTickets {
     }
 
     private void verHistorial(){
+        System.out.println("\n:::::::::::::::::::::::::::::::::::::::::::::::::::");
         if (enAtencion == null) {
-            System.out.println("No hay ticket en atencion");
+            System.out.println(CYAN +"No hay ticket en atencion"+ RESET);
             return;
         }
         System.out.println("Notas del ticket actual:");
@@ -180,7 +199,8 @@ public class GestorTickets {
     }
 
     private void buscarTicket(){
-        System.out.println("-------Lista de tickets registrados-------");
+        System.out.println("\n:::::::::::::::::::::::::::::::::::::::::::::::::::");
+        System.out.println(CYAN +"-------Lista de tickets registrados-------"+ RESET);
         for (Ticket ticket : historial) {
             ticket.mostrarInfo();
         }
@@ -191,12 +211,13 @@ public class GestorTickets {
         for (Ticket ticket : historial) {
             if (ticket.id == numeroTicket) {
                 ticket.mostrarInfo();
-                System.out.println("Notas registradas:");
+                System.out.println(BLUE +"Notas registradas:"+ RESET);
                 ticket.notas.listar();
                 return;
             }
         }
-        System.out.println("Ticket no encontrado");
+        System.out.println(CYAN +"Ticket no encontrado"+ RESET);
+
     }
 
 }
