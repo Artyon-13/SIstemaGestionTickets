@@ -21,10 +21,10 @@ public class GestorTickets {
 
     public void menu(){
         int opcion;
-           
+
         do {
             //Interfaz del Usuario principal
-            System.out.println("*************************************************");
+            System.out.println("*****************");
             System.out.println(PURPLE + "-----Modulo de Atencion CAE----" + RESET);
             System.out.println("1. Nuevo Ticket");
             System.out.println("2. Atender siguiente");
@@ -37,10 +37,7 @@ public class GestorTickets {
             System.out.println("9. Ver historial de ticket actual");
             System.out.println("10. Buscar ticket");
             System.out.println("0. Salir");
-            System.out.print("Opcion: ");
-
-            opcion = scanner.nextInt();
-            scanner.nextLine();
+            opcion = pedirOpcionMenu();
 
             switch (opcion) {
                 case 1 -> insertarTicket();
@@ -58,16 +55,53 @@ public class GestorTickets {
             }
         } while (opcion != 0);
     }
+    private int pedirOpcionMenu() {
+        while (true) {
+            System.out.print("Opcion (0-10): ");
+            String linea = scanner.nextLine();
+            if (linea == null) {
+                System.out.println(RED + "Entrada inválida: ingrese un número entre 0 y 10." + RESET);
+                continue;
+            }
+            linea = linea.trim();
+            // Solo dígitos (rechaza letras, símbolos, decimales con punto/coma, signos)
+            if (!linea.matches("\\d+")) {
+                System.out.println(RED + "Entrada inválida: solo se permiten dígitos (0-10)." + RESET);
+                continue;
+            }
+
+            try {
+                int opt = Integer.parseInt(linea);
+                if (opt >= 0 && opt <= 10) {
+                    return opt;
+                } else {
+                    System.out.println(RED + "Opción inválida: debe estar entre 0 y 10." + RESET);
+                }
+            } catch (NumberFormatException e) {
+
+                System.out.println(RED + "Entrada inválida: error al interpretar el número." + RESET);
+            }
+        }
+    }
 
     private void insertarTicket() {
         System.out.println("\n===================================================");
         System.out.print(GREEN +"Nombre del estudiante: "+ RESET);
         String nombre = scanner.nextLine();
+        String cedula = pedirCedulaValida();
+
+        Ticket ticketExistente = existeTicketCedula(cedula);
+        if (ticketExistente != null) {
+            if (!ticketExistente.estudiante.equalsIgnoreCase(nombre)){
+                System.out.println(RED + "La cedula ingresada se encuentra registrada con otro nombre (" + ticketExistente.estudiante + ")" + RESET);
+            }
+            return;
+        }
         System.out.println("\n===================================================");
         System.out.print(GREEN +"Tipo de Tramite: " + RESET);
         String tipoTramite = scanner.nextLine();
         System.out.println("\n===================================================");
-        Ticket ticket = new Ticket(id++, nombre, tipoTramite);
+        Ticket ticket = new Ticket(id++, nombre, cedula, tipoTramite);
         cola.insertar(ticket);
         System.out.println(CYAN +"Ticket #" + ticket.id + " agregado correctamente" + RESET);
         historial.add(ticket);
@@ -100,40 +134,91 @@ public class GestorTickets {
         System.out.print(BLUE +"Ingrese una nota: "+ RESET);
         String texto = scanner.nextLine();
         enAtencion.notas.insertarInicio(texto);
-        undo.push("Agrego nota: " + texto); //Guarda accion  para deshacer 
-        redo.limpiar(); //Limpia redo al hacer una nueva accion 
+        undo.push("Agrego nota: " + texto); //Guarda accion  para deshacer
+        redo.limpiar(); //Limpia redo al hacer una nueva accion
         System.out.println(BLUE +"Nota agregada correctamente"+ RESET);
     }
     private void eliminarNota() {
         System.out.println("\n:::::::::::::::::::::::::::::::::::::::::::::::::::");
         if (enAtencion == null) {
-            System.out.println(CYAN +"No hay ticket en atencion"+ RESET);
+            System.out.println(CYAN + "No hay ticket en atencion" + RESET);
             return;
         }
-        System.out.print("Ingrese una nota a eliminar: ");
-        String texto = scanner.nextLine();
-        System.out.print("\n");
-        if (enAtencion.notas.eliminar(texto)) {
-            undo.push(BLUE +"Elimino nota: " + texto + RESET);
-            redo.limpiar();
-            System.out.println(BLUE +"Nota eliminada correctamente"+ RESET);
-        } else {
-            System.out.println(BLUE +"Nota no encontrada"+ RESET);
+
+        System.out.println("Notas registradas:");
+        enAtencion.notas.listarConNumeros(); // Mostrar con números
+
+        while (true) {
+            System.out.print("Ingrese el número de la nota a eliminar (solo dígitos): ");
+            String linea = scanner.nextLine();
+            if (linea == null || linea.trim().isEmpty()) {
+                System.out.println(RED + "Entrada vacía: ingrese el número de la nota." + RESET);
+                continue;
+            }
+
+            linea = linea.trim();
+            // Solo dígitos: rechaza letras, símbolos, decimales, signos, etc.
+            if (!linea.matches("\\d+")) {
+                System.out.println(RED + "Entrada inválida: solo se permiten números (sin letras ni símbolos)." + RESET);
+                continue;
+            }
+
+            int numeroNota;
+            try {
+                numeroNota = Integer.parseInt(linea);
+            } catch (NumberFormatException e) {
+                System.out.println(RED + "Número inválido (demasiado grande)." + RESET);
+                continue;
+            }
+
+            if (enAtencion.notas.eliminarPorNumero(numeroNota)) {
+                undo.push("Eliminar nota #" + numeroNota);
+                redo.limpiar();
+                System.out.println(BLUE + "Nota eliminada correctamente" + RESET);
+                break;
+            } else {
+                System.out.println(RED + "Número de nota inválido. Intente de nuevo." + RESET);
+                // sigue el bucle para permitir reintentos
+            }
         }
     }
+
+    private String pedirCedulaValida() {
+        String cedula;
+        while (true) {
+            System.out.print(YELLOW + "Cedula del estudiante: " + RESET);
+            cedula = scanner.nextLine();
+
+            // Verifica que sean 10 dígitos
+            if (!cedula.matches("\\d{10}")) {
+                System.out.println(RED + "Error: La cédula debe tener exactamente 10 dígitos." + RESET);
+                continue;
+            }
+/*
+            if (existeTikectActivo(cedula)) {
+                System.out.println(RED + "Error: Usted cuenta con un ticket en espera." + RESET);
+                continue;
+            }
+            */
+
+            return cedula;
+        }
+    }
+
+
     private void deshacer() {
         System.out.println("\n:::::::::::::::::::::::::::::::::::::::::::::::::::");
         if (enAtencion == null) {
             System.out.println(CYAN +"No hay ticket en atencion"+ RESET);
             return;
         }
-        
-        String accion = undo.pop(); // Obtiene la ulma accion 
+
+        String accion = undo.pop(); // Obtiene la ulma accion
         if (accion == null) {
             System.out.println("No hay acciones para deshacer");
             return;
         }
-        // Logica para revertir la  accion 
+        // Logica para revertir la  accion
         if (accion.startsWith("Agrego nota: ")) {
             String texto = accion.substring(13);
             enAtencion.notas.eliminar(texto);
@@ -178,14 +263,14 @@ public class GestorTickets {
             System.out.println("No hay ticket en atencion");
             return;
         }
-       enAtencion.estado = EstadoTicket.Completado;
-       System.out.println(CYAN +"Ticket finalizado correctamente"+ RESET);
-       enAtencion.mostrarInfo();
-       System.out.println(BLUE +"Notas registradas:"+ RESET);
-       enAtencion.notas.listar();
-       enAtencion = null; //Libera el tikect actual 
-       undo.limpiar(); //Limpia pilas de acciones 
-       redo.limpiar();
+        enAtencion.estado = EstadoTicket.Completado;
+        System.out.println(CYAN +"Ticket finalizado correctamente"+ RESET);
+        enAtencion.mostrarInfo();
+        System.out.println(BLUE +"Notas registradas:"+ RESET);
+        enAtencion.notas.listarConNumeros();
+        enAtencion = null; //Libera el tikect actual
+        undo.limpiar(); //Limpia pilas de acciones
+        redo.limpiar();
     }
 
     private void verHistorial(){
@@ -195,7 +280,7 @@ public class GestorTickets {
             return;
         }
         System.out.println("Notas del ticket actual:");
-        enAtencion.notas.listar();
+        enAtencion.notas.listarConNumeros();
     }
 
     private void buscarTicket(){
@@ -207,20 +292,26 @@ public class GestorTickets {
         System.out.print("Numero de ticket para mas detalles: ");
         int numeroTicket = scanner.nextInt();
         scanner.nextLine();
-        // Busca de forma lineal en el historial 
+        // Busca de forma lineal en el historial
         for (Ticket ticket : historial) {
             if (ticket.id == numeroTicket) {
                 ticket.mostrarInfo();
                 System.out.println(BLUE +"Notas registradas:"+ RESET);
-                ticket.notas.listar();
+                ticket.notas.listarConNumeros();
                 return;
             }
         }
         System.out.println(CYAN +"Ticket no encontrado"+ RESET);
 
     }
+    private Ticket existeTicketCedula(String cedula){
+        for (Ticket ticket : historial) {
+            if (ticket.cedula.equals(cedula)) {
+                return ticket;
+            }
+        }
+        return null;
+    }
+
 
 }
-
-
-
