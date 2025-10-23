@@ -34,8 +34,5 @@ Se ha priorizado el manejo de las siguientes situaciones para garantizar la soli
   * **Undo/Redo en Vacio:** Prevenir errores al intentar deshacer/rehacer sin que existan acciones previas registradas en las pilas.
   * **Eliminacion de Notas Inexistentes:** Gestion de referencias seguras al intentar eliminar una nota que no se encuentre.
   * **Integridad Post-Finalización:** Asegurar que los casos en estado **COMPLETADO** no puedan ser alterados por nuevas acciones o por la funcionalidad de "Undo/Redo".
-  * **Cambio de Estado Sin Atención:** Evitar cambios de estado si no hay un caso activo siendo atendido por el agente.
-
-## IV. Escenarios de prueba
-
+  
 
