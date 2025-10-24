@@ -39,6 +39,7 @@ public class GestorTickets {
             System.out.println("0. Salir");
             opcion = pedirOpcionMenu();
 
+            //Ejecuta una accion dependiendo de la opcion que seleccionen
             switch (opcion) {
                 case 1 -> insertarTicket();
                 case 2 -> atenderTicket();
@@ -55,6 +56,8 @@ public class GestorTickets {
             }
         } while (opcion != 0);
     }
+
+    // Solicita y valida una opción de menu (0-10)
     private int pedirOpcionMenu() {
         while (true) {
             System.out.print("Opcion (0-10): ");
@@ -84,12 +87,14 @@ public class GestorTickets {
         }
     }
 
+    // Crea un nuevo ticket y lo agrega a la cola y al historial
     private void insertarTicket() {
         System.out.println("\n===================================================");
         System.out.print(GREEN +"Nombre del estudiante: "+ RESET);
         String nombre = scanner.nextLine();
         String cedula = pedirCedulaValida();
 
+        // Verifica si ya existe un ticket con la misma cédula
         Ticket ticketExistente = existeTicketCedula(cedula);
         if (ticketExistente != null) {
             if (!ticketExistente.estudiante.equalsIgnoreCase(nombre)){
@@ -107,6 +112,7 @@ public class GestorTickets {
         historial.add(ticket);
     }
 
+    // Atiende el siguiente ticket de la cola
     private void atenderTicket() {
         System.out.println("\n:::::::::::::::::::::::::::::::::::::::::::::::::::");
         if (enAtencion != null) {
@@ -125,6 +131,8 @@ public class GestorTickets {
         System.out.println(CYAN + "Atendiendo ticket:" + RESET);
         enAtencion.mostrarInfo();
     }
+
+    // Permite agregar notas en el ticket
     private void agregarNota() {
         System.out.println("\n:::::::::::::::::::::::::::::::::::::::::::::::::::");
         if (enAtencion == null) {
@@ -138,6 +146,8 @@ public class GestorTickets {
         redo.limpiar(); //Limpia redo al hacer una nueva accion
         System.out.println(BLUE +"Nota agregada correctamente"+ RESET);
     }
+
+    // Elimina una nota específica del ticket en atención
     private void eliminarNota() {
         System.out.println("\n:::::::::::::::::::::::::::::::::::::::::::::::::::");
         if (enAtencion == null) {
@@ -257,6 +267,7 @@ public class GestorTickets {
         }
     }
 
+    // Finaliza la atención del ticket actual y limpia las pilas de acciones
     private void finalizarAtencion() {
         System.out.println("\n:::::::::::::::::::::::::::::::::::::::::::::::::::");
         if (enAtencion == null) {
@@ -273,6 +284,7 @@ public class GestorTickets {
         redo.limpiar();
     }
 
+    // Muestra las notas del ticket en atención
     private void verHistorial(){
         System.out.println("\n:::::::::::::::::::::::::::::::::::::::::::::::::::");
         if (enAtencion == null) {
@@ -283,6 +295,7 @@ public class GestorTickets {
         enAtencion.notas.listarConNumeros();
     }
 
+    //Busca un ticket por su id 
     private void buscarTicket(){
         System.out.println("\n:::::::::::::::::::::::::::::::::::::::::::::::::::");
         System.out.println(CYAN +"-------Lista de tickets registrados-------"+ RESET);
@@ -304,6 +317,8 @@ public class GestorTickets {
         System.out.println(CYAN +"Ticket no encontrado"+ RESET);
 
     }
+
+    // Verifica si existe un ticket con la cedula que ingreso
     private Ticket existeTicketCedula(String cedula){
         for (Ticket ticket : historial) {
             if (ticket.cedula.equals(cedula)) {
@@ -312,6 +327,7 @@ public class GestorTickets {
         }
         return null;
     }
+
 
 
 }
