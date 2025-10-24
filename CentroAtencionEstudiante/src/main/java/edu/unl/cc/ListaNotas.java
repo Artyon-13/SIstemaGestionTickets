@@ -3,6 +3,7 @@ package edu.unl.cc;
 public class ListaNotas {
     private Nota cabeza;
 
+    // Inserta una nueva nota al inicio de la lista
     public void insertarInicio(String texto) {
         Nota nueva = new Nota(texto);
         nueva.siguiente = cabeza;
@@ -29,6 +30,7 @@ public class ListaNotas {
         return false;
     }
 
+    // Muestra todas las notas con un número secuencial
     public void listarConNumeros() {
         Nota actual = cabeza;
         if (actual == null) {
@@ -42,7 +44,8 @@ public class ListaNotas {
             numero++;
         }
     }
-
+    
+    // Elimina una nota según su posición en la lista
     public boolean eliminarPorNumero(int numero) {
         if (cabeza == null || numero <= 0) return false;
 
@@ -64,4 +67,5 @@ public class ListaNotas {
         }
         return false;
     }
+
 }
