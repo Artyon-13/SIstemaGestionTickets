@@ -23,10 +23,6 @@ public class Ticket {
         System.out.println("Ticket #" + id + "CI: " + cedula + "|" + estudiante + "|" + tipoTramite + "| Estado: " + estado);
     }
 
-    //Metodo para convertir el nuestro ticket a CSV haciendo uso de las , ya que asi se manejan los archivos CSV
-    public String toCSV() {
-        return id + "," + estudiante + "," + cedula + "," + tipoTramite + "," + estado;
-    }
 
 }
 
