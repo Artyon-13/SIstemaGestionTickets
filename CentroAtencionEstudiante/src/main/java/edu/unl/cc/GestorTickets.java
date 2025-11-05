@@ -323,20 +323,37 @@ public class GestorTickets {
 
     //Busca un ticket por su id 
     private void buscarTicket(){
+        int opcion;
         System.out.println("\n:::::::::::::::::::::::::::::::::::::::::::::::::::");
         System.out.println(CYAN +"-------Lista de tickets registrados-------"+ RESET);
         for (Ticket ticket : historial) {
             ticket.mostrarInfo();
         }
-        System.out.print("Numero de ticket para mas detalles: ");
+        System.out.print("Numero de ticket para visualizar: ");
         int numeroTicket = scanner.nextInt();
         scanner.nextLine();
         // Busca de forma lineal en el historial
         for (Ticket ticket : historial) {
             if (ticket.id == numeroTicket) {
                 ticket.mostrarInfo();
-                System.out.println(BLUE +"Notas registradas:"+ RESET);
-                ticket.notas.listarConNumeros();
+                System.out.println("------ Elija una opcion ------ ");
+                System.out.println("1. Ver notas");
+                System.out.println("2. Eliminar ticket");
+                System.out.print("Opcion (1-2): ");
+                opcion = scanner.nextInt();
+                scanner.nextLine();
+                if (opcion == 1) {
+                    System.out.println(BLUE +"Notas registradas:"+ RESET);
+                    ticket.notas.listarConNumeros();
+                    return;
+                } else if (opcion == 2) {
+                    historial.remove(ticket);
+                    undo.limpiar();
+                    redo.limpiar();
+                    cola.eliminarTicket(numeroTicket);
+                    System.out.println(CYAN +"Ticket eliminado correctamente"+ RESET);
+                    return;
+                }
                 return;
             }
         }
