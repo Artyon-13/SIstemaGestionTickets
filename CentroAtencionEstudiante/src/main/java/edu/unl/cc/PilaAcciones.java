@@ -19,9 +19,9 @@ public class PilaAcciones {
         return accion;
     }
 
-    public boolean esVacia() {
+    /*public boolean esVacia() {
         return tope == null;
-    }
+    }*/
 
     public void limpiar (){
         tope = null;

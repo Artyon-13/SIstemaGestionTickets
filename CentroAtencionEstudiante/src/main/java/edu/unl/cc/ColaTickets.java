@@ -3,9 +3,12 @@ package edu.unl.cc;
 public class ColaTickets {
     public NodoCola frente;
     private NodoCola fin;
+
+
     public boolean esVacia() {
         return frente == null;
     }
+
     public void insertar(Ticket ticket) {
         NodoCola nuevo = new NodoCola(ticket);
         if (esVacia()) {
@@ -41,6 +44,33 @@ public class ColaTickets {
             actual.ticket.mostrarInfo();
             actual = actual.siguiente;
         }
+    }
+
+    public Ticket eliminarTicket (int id) {
+        if (esVacia()) return null;
+
+        NodoCola actual = frente;
+        NodoCola anterior = null;
+
+        while (actual != null) {
+            if (actual.ticket.getId() == id) {  // Encontramos el ticket a eliminar
+                // Si es el primero
+                if (anterior == null) {
+                    frente = actual.siguiente;
+                } else {
+                    anterior.siguiente = actual.siguiente;
+                }
+                // Si era el último
+                if (actual == fin) {
+                    fin = anterior;
+                }
+                return actual.ticket;
+            }
+            anterior = actual;
+            actual = actual.siguiente;
+        }
+
+        return null; // Si no se encontró ningun ticket
     }
 }
 
