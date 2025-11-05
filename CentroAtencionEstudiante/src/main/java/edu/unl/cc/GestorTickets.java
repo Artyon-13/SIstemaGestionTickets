@@ -77,7 +77,7 @@ public class GestorTickets {
                 case 9 -> verHistorial();
                 case 10 -> buscarTicket();
                 case 11 -> consultarPorEstado();
-                case 0 -> {
+                case 0 -> { System.out.println("Gracias por usar el modulo de atencion CAE"); System.out.println("Adios..."); System.exit(0);
                 }
 
                 default -> System.out.println("Opcion invalida");
