@@ -60,6 +60,7 @@ public class GestorTickets {
             System.out.println("8. Ver tickets en espera");
             System.out.println("9. Ver historial de ticket actual");
             System.out.println("10. Buscar ticket");
+            System.out.println("11. Consultar tickets por estado");
             System.out.println("0. Salir");
             opcion = pedirOpcionMenu();
 
@@ -75,6 +76,7 @@ public class GestorTickets {
                 case 8 -> cola.listar();
                 case 9 -> verHistorial();
                 case 10 -> buscarTicket();
+                case 11 -> consultarPorEstado();
                 case 0 -> {
                 }
 
@@ -86,25 +88,25 @@ public class GestorTickets {
     // Solicita y valida una opción de menu (0-10)
     private int pedirOpcionMenu() {
         while (true) {
-            System.out.print("Opcion (0-10): ");
+            System.out.print("Opcion (0-11): ");
             String linea = scanner.nextLine();
             if (linea == null) {
-                System.out.println(RED + "Entrada inválida: ingrese un número entre 0 y 10." + RESET);
+                System.out.println(RED + "Entrada inválida: ingrese un número entre 0 y 11." + RESET);
                 continue;
             }
             linea = linea.trim();
             // Solo dígitos (rechaza letras, símbolos, decimales con punto/coma, signos)
             if (!linea.matches("\\d+")) {
-                System.out.println(RED + "Entrada inválida: solo se permiten dígitos (0-10)." + RESET);
+                System.out.println(RED + "Entrada inválida: solo se permiten dígitos (0-11)." + RESET);
                 continue;
             }
 
             try {
                 int opt = Integer.parseInt(linea);
-                if (opt >= 0 && opt <= 10) {
+                if (opt >= 0 && opt <= 11) {
                     return opt;
                 } else {
-                    System.out.println(RED + "Opción inválida: debe estar entre 0 y 10." + RESET);
+                    System.out.println(RED + "Opción inválida: debe estar entre 0 y 11." + RESET);
                 }
             } catch (NumberFormatException e) {
 
@@ -471,6 +473,50 @@ public class GestorTickets {
             System.out.println("No se encontró el archivo de notas, se creará uno nuevo al guardar.");
         } catch (IOException e) {
             System.out.println("Error al leer el archivo de notas: " + e.getMessage());
+        }
+    }
+
+    private void consultarPorEstado(){
+        System.out.println("\n-------------------------------");
+        if (historial.isEmpty()){
+            System.out.println(CYAN + "No existen tickects registrados" + RESET);
+            return;
+        }
+        System.out.println(CYAN + "Seleccione el estado:" + RESET);
+        System.out.println("1. En Espera");
+        System.out.println("2. En Atencion");
+        System.out.println("3. En_Proceso");
+        System.out.println("4. Pendiente_DOCS");
+        System.out.println("5. Completado");
+        System.out.print("Opcion: ");
+
+        String opcion = scanner.nextLine().trim();
+        EstadoTicket estadoBuscado = null;
+
+        switch (opcion){
+            case "1" -> estadoBuscado = EstadoTicket.En_Cola;
+            case "2" -> estadoBuscado = EstadoTicket.En_Atencion;
+            case "3" -> estadoBuscado = EstadoTicket.En_Proceso;
+            case "4" -> estadoBuscado = EstadoTicket.Pendiente_DOCS;
+            case "5" -> estadoBuscado = EstadoTicket.Completado;
+            default -> {
+                System.out.println(RED + "Opcion no valida" + RESET);
+                return;
+            }
+        }
+
+        System.out.println(CYAN + "\nTickets con estado: " + estadoBuscado + RESET);
+        boolean encontrado = false;
+
+        for (Ticket ticket : historial){
+            if (ticket.estado == estadoBuscado){
+                ticket.mostrarInfo();
+                encontrado = true;
+            }
+        }
+
+        if (!encontrado){
+            System.out.println(YELLOW + "No hay tickets con ese estado" + RESET);
         }
     }
 
