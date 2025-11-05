@@ -19,6 +19,10 @@ public class Ticket {
 
     }
 
+    public int getId() {
+        return id;
+    }
+
     public void mostrarInfo() {
         System.out.println("Ticket #" + id + "CI: " + cedula + "|" + estudiante + "|" + tipoTramite + "| Estado: " + estado);
     }
