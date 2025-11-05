@@ -2,6 +2,7 @@ package edu.unl.cc;
 // Cola de tickets implementada con lista enlazada para insertar, sacar, verificar y listar tickets
 public class ColaTickets {
     public NodoCola frente;
+    public boolean esVacia;
     private NodoCola fin;
     public boolean esVacia() {
         return frente == null;
@@ -34,8 +35,6 @@ public class ColaTickets {
         }
 
         NodoCola actual = frente;
-        System.out.println("----------------------------------");
-        System.out.println("Tickets en espera:");
         System.out.println("----------------------------------");
         while (actual != null){
             actual.ticket.mostrarInfo();

@@ -12,6 +12,7 @@ public class GestorTickets {
     public static final String PURPLE = "\u001B[35m";
     public static final String CYAN = "\u001B[36m";
     private ColaTickets cola = new ColaTickets();
+    private ColaTickets colaUrgente = new ColaTickets();
     private PilaAcciones undo = new PilaAcciones();
     private PilaAcciones redo = new PilaAcciones();
     private int id = 1;
@@ -48,7 +49,7 @@ public class GestorTickets {
                 case 5 -> deshacer();
                 case 6 -> rehacer();
                 case 7 -> finalizarAtencion();
-                case 8 -> cola.listar();
+                case 8 -> listarTicketsAgregados();
                 case 9 -> verHistorial();
                 case 10 -> buscarTicket();
                 case 0 -> System.out.println("Saliendo...");
@@ -105,11 +106,21 @@ public class GestorTickets {
         System.out.println("\n===================================================");
         System.out.print(GREEN +"Tipo de Tramite: " + RESET);
         String tipoTramite = scanner.nextLine();
+        System.out.print("\n");
+        System.out.println("¿El ticket es urgente? (s/n):   ");
+        boolean esUrgente = scanner.nextLine().trim().equalsIgnoreCase("s");
+
         System.out.println("\n===================================================");
-        Ticket ticket = new Ticket(id++, nombre, cedula, tipoTramite);
-        cola.insertar(ticket);
-        System.out.println(CYAN +"Ticket #" + ticket.id + " agregado correctamente" + RESET);
+        Ticket ticket = new Ticket(id++, nombre, cedula, tipoTramite, esUrgente);
         historial.add(ticket);
+        if (esUrgente) {
+            colaUrgente.insertar(ticket);
+            System.out.println(CYAN + "Ticket urgente #" + ticket.id + " agregado correctamente" + RESET);
+        }else{
+            cola.insertar(ticket);
+            System.out.println(CYAN +"Ticket normal #" + ticket.id + " agregado correctamente" + RESET);
+
+        }
     }
 
     // Atiende el siguiente ticket de la cola
@@ -120,15 +131,20 @@ public class GestorTickets {
             return;
         }
         //Saca el ticket siguinte de la cola FIFO
-        enAtencion = cola.sacar();
-        if (enAtencion == null) {
-            System.out.println(CYAN +"No hay tickets en espera..."+ RESET);
-            return;
+        if (!colaUrgente.esVacia()){
+            enAtencion = colaUrgente.sacar();
+            System.out.println("\n Atendiendo ticket urgente");
+            System.out.println(".....................................................");
+        } else if (!cola.esVacia()){
+            enAtencion = cola.sacar();
+            System.out.println("\n Atendiendo ticket normal");
+            System.out.println(".....................................................");
+        } else {
+            System.out.println(CYAN + "No hay tickets en espera..."+ RESET);
         }
         enAtencion.estado = EstadoTicket.En_Atencion;
         undo.limpiar();
         redo.limpiar();
-        System.out.println(CYAN + "Atendiendo ticket:" + RESET);
         enAtencion.mostrarInfo();
     }
 
@@ -204,13 +220,6 @@ public class GestorTickets {
                 System.out.println(RED + "Error: La cédula debe tener exactamente 10 dígitos." + RESET);
                 continue;
             }
-/*
-            if (existeTikectActivo(cedula)) {
-                System.out.println(RED + "Error: Usted cuenta con un ticket en espera." + RESET);
-                continue;
-            }
-            */
-
             return cedula;
         }
     }
@@ -328,6 +337,12 @@ public class GestorTickets {
         return null;
     }
 
-
-
+    public void listarTicketsAgregados() {
+        System.out.println("Tickets Urgentes");
+        System.out.println(".....................................................");
+        colaUrgente.listar();
+        System.out.println("Tickets Normales");
+        System.out.println(".....................................................");
+        cola.listar();
+    }
 }
