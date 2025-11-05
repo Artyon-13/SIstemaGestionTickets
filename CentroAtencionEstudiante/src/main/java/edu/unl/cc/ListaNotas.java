@@ -68,4 +68,21 @@ public class ListaNotas {
         return false;
     }
 
+    // Metodo para deevolver todas las notas como una lista de Strings (para guardar en CSV)
+    public java.util.List<String> obtenerNotasComoLista() {
+        java.util.List<String> lista = new java.util.ArrayList<>();
+        Nota actual = cabeza;
+        while (actual != null) {
+            lista.add(actual.texto);
+            actual = actual.siguiente;
+        }
+        return lista;
+    }
+
+    // Agrega una nota (usado al cargar desde CSV)
+    public void agregarNota(String texto) {
+        insertarInicio(texto);
+    }
+
+
 }

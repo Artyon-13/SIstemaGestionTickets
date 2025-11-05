@@ -20,22 +20,23 @@ public class GestorTickets {
     private Scanner scanner = new Scanner(System.in);
     private List<Ticket> historial = new ArrayList<>();
     private static final String ARCHIVO_CSV = "tickets.csv";
-    private List<Ticket> tickets;
+
 
     public GestorTickets() {
         // Cargar los tickets existentes (si esque hay)
-        tickets = cargarTicketsCSV(ARCHIVO_CSV);
+        historial = cargarTicketsCSV(ARCHIVO_CSV);
+        cargarNotasCSV(historial, "notas.csv");
 
         // Restaura los tickets que siguen con su estad en cola
-        for (Ticket t : tickets) {
+        for (Ticket t : historial) {
             if (t.estado == EstadoTicket.En_Cola) {
                 cola.insertar(t);
             }
         }
 
         // este apartado hace que desde el ultimo ticket creado se almacene su id y al momento de crear otro este id vaya aumentado por lo que al volver a cargar el programa se vea esto
-        if (!tickets.isEmpty()) { // aqui se verifica si existen tickets anteriores
-            id = tickets.get(tickets.size() - 1).id + 1; // en este apartado tenemos para obtener el ultimo ticket de la lista
+        if (!historial.isEmpty()) { // aqui se verifica si existen tickets anteriores
+            id = historial.get(historial.size() - 1).id + 1; // en este apartado tenemos para obtener el ultimo ticket de la lista
                                                          // ticket.size nos devuelve los elementos que contiene la lista en este cado de los tickets
                                                          // y como se sabe en java los elementos de las listas empiezan en 0 entonces por eso ponemos - 1
                                                         // y por ultimo el id + 1 para que al momento de tener un nuevo ticket este id vaya creciendo y sea consecutivo
@@ -74,7 +75,9 @@ public class GestorTickets {
                 case 8 -> cola.listar();
                 case 9 -> verHistorial();
                 case 10 -> buscarTicket();
-                case 0 -> System.out.println("Saliendo...");
+                case 0 -> {
+                }
+
                 default -> System.out.println("Opcion invalida");
             }
         } while (opcion != 0);
@@ -131,8 +134,8 @@ public class GestorTickets {
         System.out.println("\n===================================================");
         Ticket ticket = new Ticket(id++, nombre, cedula, tipoTramite);
         cola.insertar(ticket);
-        tickets.add(ticket); // Guardamos también en la lista persistente
-        guardarTicketsCSV(tickets, ARCHIVO_CSV); // Se guarda automáticamente en la lista y en el archivo csv
+        historial.add(ticket); // Guardamos también en la lista persistente
+        guardarTicketsCSV(historial, ARCHIVO_CSV); // Se guarda automáticamente en la lista y en el archivo csv
         System.out.println(CYAN +"Ticket #" + ticket.id + " agregado correctamente y guardado." + RESET); // para verificar si el archivo de guardo de manera correcta
 
     }
@@ -169,6 +172,7 @@ public class GestorTickets {
         enAtencion.notas.insertarInicio(texto);
         undo.push("Agrego nota: " + texto); //Guarda accion  para deshacer
         redo.limpiar(); //Limpia redo al hacer una nueva accion
+        guardarNotasCSV(historial, "notas.csv"); // guarda la nota en el archivo csv despues aver sido creada
         System.out.println(BLUE +"Nota agregada correctamente"+ RESET);
     }
 
@@ -209,6 +213,7 @@ public class GestorTickets {
             if (enAtencion.notas.eliminarPorNumero(numeroNota)) {
                 undo.push("Eliminar nota #" + numeroNota);
                 redo.limpiar();
+                guardarNotasCSV(historial, "notas.csv"); // guarda la nota despues de elimar osea que actualiza en caso de ser eliminada
                 System.out.println(BLUE + "Nota eliminada correctamente" + RESET);
                 break;
             } else {
@@ -307,7 +312,7 @@ public class GestorTickets {
         enAtencion = null; //Libera el tikect actual
         undo.limpiar(); //Limpia pilas de acciones
         redo.limpiar();
-        guardarTicketsCSV(tickets, ARCHIVO_CSV);
+        guardarTicketsCSV(historial, ARCHIVO_CSV);
     }
 
     // Muestra las notas del ticket en atención
@@ -419,6 +424,54 @@ public class GestorTickets {
         }
 
         return tickets;
+    }
+
+    // Metodo para guardar las notas de todos los tickets en un archivo CSV
+    public void guardarNotasCSV(List<Ticket> tickets, String nombreArchivo) {
+        try (PrintWriter writer = new PrintWriter(new FileWriter(nombreArchivo))) {
+            writer.println("ticket_id,nota"); // Cabecera del archivo CSV
+
+            for (Ticket t : tickets) {
+                List<String> notas = t.notas.obtenerNotasComoLista(); // obtiene las notas del ticket
+                for (String nota : notas) {
+                    writer.println(t.id + "," + nota.replace(",", " ")); // reemplaza comas para no romper el formato CSV
+                }
+            }
+
+            System.out.println("Notas guardadas correctamente en " + nombreArchivo);
+        } catch (IOException e) {
+            System.out.println("Error al guardar las notas: " + e.getMessage());
+        }
+    }
+
+    // Metodo para cargar las notas desde un archivo CSV y asignarlas a sus tickets
+    public void cargarNotasCSV(List<Ticket> tickets, String nombreArchivo) {
+        try (BufferedReader br = new BufferedReader(new FileReader(nombreArchivo))) {
+            String linea;
+            br.readLine(); // Saltar la cabecera
+
+            while ((linea = br.readLine()) != null) {
+                String[] partes = linea.split(",", 2); // solo dividir en 2 partes: id y nota
+                if (partes.length == 2) {
+                    int idTicket = Integer.parseInt(partes[0]);
+                    String nota = partes[1];
+
+                    // Buscar el ticket con el mismo ID y agregarle la nota
+                    for (Ticket t : tickets) {
+                        if (t.id == idTicket) {
+                            t.notas.agregarNota(nota);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            System.out.println("Notas cargadas correctamente desde " + nombreArchivo);
+        } catch (FileNotFoundException e) {
+            System.out.println("No se encontró el archivo de notas, se creará uno nuevo al guardar.");
+        } catch (IOException e) {
+            System.out.println("Error al leer el archivo de notas: " + e.getMessage());
+        }
     }
 
 }
