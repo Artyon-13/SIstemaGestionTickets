@@ -216,11 +216,9 @@ public class GestorTickets {
             System.out.println(CYAN + "No hay ticket en atencion" + RESET);
             return;
         }
-
         System.out.println("Notas registradas:");
-        enAtencion.notas.listarConNumeros(); // Mostrar con números
-
-        while (true) {
+         // Mostrar con números
+        while (enAtencion.notas.listarConNumeros() == true) {
             System.out.print("Ingrese el número de la nota a eliminar (solo dígitos): ");
             String linea = scanner.nextLine();
             if (linea == null || linea.trim().isEmpty()) {
@@ -251,6 +249,7 @@ public class GestorTickets {
                 break;
             } else {
                 System.out.println(RED + "Número de nota inválido. Intente de nuevo." + RESET);
+                eliminarNota();
                 // sigue el bucle para permitir reintentos
             }
         }
