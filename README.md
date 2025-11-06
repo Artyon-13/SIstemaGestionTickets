@@ -1,38 +1,40 @@
 # SIstemaGestionTickets
 
-Este proyecto implementa el módulo de gestión de tickets para el Centro de Atención al Estudiante (CAE), permitiendo la recepción, atención y finalización de trámites (certificados, constancias, homologaciones, etc.).
-El módulo garantiza un flujo de trabajo organizado con funcionalidades de deshacer/rehacer y un historial de observaciones por ticket y se basa en una estricta separación entre la lógica de dominio y la interacción con los datos de entrada y salida. 
+Desarrollar un módulo de consola robusto y reproducible que persista datos entre ejecuciones, aplique un catálogo de estados con transiciones
+válidas, genere consultas/reportes útiles y soporte atención prioritaria (cola de urgentes), integrando SLL, Stack y Queue.
 
+                                                       MANUAL DE INSTRUCCIONES
 
-### Acciones Registrables para Undo/Redo
+Menú de Opciones
 
-Se registran en la pila los **estados significativos** del caso, así como las acciones mínimas necesarias para un deshacer/rehacer:
-
-  * Añadir Nota
-  * Eliminar Nota
-  * Cambio de Estado
-
-## II.Estados del Caso del Ticket
-
-El estado de cada ticket es fundamental para el seguimiento:
-
-| Estado | Descripción |
-| :--- | :--- |
-| **EN COLA** | El ticket está en la estructura de espera. |
-| **EN ATENCIÓN** | Un agente está trabajando activamente en el caso.|
-| **EN PROCESO** | La resolución requiere acciones internas fuera del alcance inmediato del sistema. |
-| **PENDIENTE DOCS** | La resolución está en pausa, esperando la entrega de documentación por parte del estudiante. |
-| **COMPLETADO** | El trámite ha sido finalizado. |
-
------
-
-## III. Casos Borde y Manejo de Errores
-
-Se ha priorizado el manejo de las siguientes situaciones para garantizar la solidez del sistema.
-
-  * **Estructuras Vacias:** Manejo seguro al intentar atender un caso cuando la cola está vacía.
-  * **Undo/Redo en Vacio:** Prevenir errores al intentar deshacer/rehacer sin que existan acciones previas registradas en las pilas.
-  * **Eliminacion de Notas Inexistentes:** Gestion de referencias seguras al intentar eliminar una nota que no se encuentre.
-  * **Integridad Post-Finalización:** Asegurar que los casos en estado **COMPLETADO** no puedan ser alterados por nuevas acciones o por la funcionalidad de "Undo/Redo".
+-----Modulo de Atencion CAE----
+1. Nuevo Ticket || Se agrega un nuevo ticket de un estudiante, el ticket puede ser normal o urgente
+2. Atender siguiente || Se atienden los tickets conforme al orden de llegada pero si es urgente tendra prioridad
+3. Agregar Nota || Ingreso de anotaciones al ticket en atención
+4. Eliminar Nota || Permite eliminar notas que fueron agregadas por error
+5. Deshacer ultimo cambio || Permite eliminar un cambio reciente
+6. Rehacer ultimo cambio || Permite rehacer un cambio que fue deshecho
+7. Finalizar Atencion || Al finalizar la atencion se permiten lo siguiente:
+    Seleccione el estado final del ticket:
+    1. Completado - Ticket finalizado exitosamente
+    2. Pendiente - El ticket quedó incompleto o falta documentación -> Si el ticket es marcado como pendiente será dirigido a la cola de tickets pendientes
+       Ticket marcado como PENDIENTE. Se lo enviará a la cola de pendientes.
+       Ticket #005CI: 1234123412|fe|fr| * Urgente| Estado: Pendiente_DOCS
+       Notas registradas:
+       1. Documentos incompletos
   
-
+8. Ver tickets en espera || Permite visualizar los tickets urgentes y normales que estan esperando atención
+9. Ver historial de ticket actual || Permite visualizar las notas que tiene el ticket en atención
+10. Buscar ticket || Muestra una lista de los tickets donde se puede ver informacion detallada del ticket seleccionado , ademas de tener dos opciones:
+         1. Ver notas - Visualización de todas las notas del tickets
+         2. Eliminar ticket 
+11. Consultar tickets por estado
+         Seleccione el estado:
+          1. En Espera
+          2. En Atencion
+          3. En_Proceso
+          4. Pendiente_DOCS
+          5. Completado
+12. Ver tickets pendientes || Muestra una lista de los tickets pendientes
+0. Salir
+Opcion (0-12): 1
