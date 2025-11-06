@@ -31,17 +31,19 @@ public class ListaNotas {
     }
 
     // Muestra todas las notas con un número secuencial
-    public void listarConNumeros() {
+    public boolean listarConNumeros() {
         Nota actual = cabeza;
         if (actual == null) {
             System.out.println("No hay notas registradas");
-            return;
-        }
-        int numero = 1;
-        while (actual != null) {
-            System.out.println(numero + ". " + actual.texto);
-            actual = actual.siguiente;
-            numero++;
+            return false;
+        } else {
+            int numero = 1;
+            while (actual != null) {
+                System.out.println(numero + ". " + actual.texto);
+                actual = actual.siguiente;
+                numero++;
+            }
+            return true;
         }
     }
     

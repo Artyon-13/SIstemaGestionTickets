@@ -1,2 +1,7 @@
 id,estudiante,cedula,tipoTramite,estado,esUrgente
-2,Anthony,1234567890,Matricula,En_Cola,false
+1,Luis Torres,1104567891,Actualización de datos personales,Pendiente_DOCS,false
+2,Maria Gomez,1104567892,Emisión de certificado de matrícula,Completado,false
+3,Jose Perez,1104567893,Solicitud de beca estudiantil,Pendiente_DOCS,false
+4,Ariel Sarango,1104567894,Trámite de cambio de carrera,En_Cola,false
+5,Daniela Ruiz,1104567895,Entrega de documentos para titulación,En_Cola,false
+6,Anthony,1234565432,Matricula,Completado,true
