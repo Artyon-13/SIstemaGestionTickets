@@ -1,3 +1,7 @@
 id,estudiante,cedula,tipoTramite,estado,esUrgente
 1,fe,1234567890,tr,Pendiente_DOCS,false
 2,re,1234567891,v,En_Cola,false
+3,r4,1212123434,fr,En_Cola,true
+4,gt,3434343434,gt,En_Cola,false
+5,fe,1234123412,fr,Pendiente_DOCS,true
+6,tr,5656565656,hy,En_Cola,false

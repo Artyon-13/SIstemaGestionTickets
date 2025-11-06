@@ -274,12 +274,6 @@ public class GestorTickets {
                 System.out.println(RED + "Error: La cédula debe tener exactamente 10 dígitos." + RESET);
                 continue;
             }
-/*
-            if (existeTikectActivo(cedula)) {
-                System.out.println(RED + "Error: Usted cuenta con un ticket en espera." + RESET);
-                continue;
-            }
-            */
 
             return cedula;
         }
