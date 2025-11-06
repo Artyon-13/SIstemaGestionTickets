@@ -1,4 +1,8 @@
+
+
 # SIstemaGestionTickets
+
+Descargar y usar el JDK 24-25
 
 Desarrollar un módulo de consola robusto y reproducible que persista datos entre ejecuciones, aplique un catálogo de estados con transiciones
 válidas, genere consultas/reportes útiles y soporte atención prioritaria (cola de urgentes), integrando SLL, Stack y Queue.
@@ -22,17 +26,17 @@ Menú de Opciones
     2. Pendiente - El ticket quedó incompleto o falta documentación -> Si el ticket es marcado como pendiente será dirigido a la cola de tickets pendientes y se podran visualizar
        las notas registradas
        
-9. Ver tickets en espera || Permite visualizar los tickets urgentes y normales que estan esperando atención
+8. Ver tickets en espera || Permite visualizar los tickets urgentes y normales que estan esperando atención
 
-10. Historial de tickets || Permite visualizar las notas que tiene el ticket en atención
+9. Ver historial del ticket actual || Permite visualizar las notas que tiene el ticket en atención
 
-11. Buscar ticket || Muestra una lista de los tickets donde se puede ver informacion detallada del ticket seleccionado , ademas de tener dos opciones:
+10. Buscar ticket || Muestra una lista de los tickets donde se puede ver informacion detallada del ticket seleccionado , ademas de tener dos opciones:
 
         1. Ver notas - Visualización de todas las notas del tickets
 
         2. Eliminar ticket 
 
-12. Consultar tickets por estado
+11. Consultar tickets por estado
          Seleccione el estado:
     
           1. En Espera
@@ -45,7 +49,7 @@ Menú de Opciones
 
           5. Completado
     
-13. Ver tickets pendientes || Muestra una lista de los tickets pendientes
+12. Ver tickets pendientes || Muestra una lista de los tickets pendientes
 
 0. Salir
 
