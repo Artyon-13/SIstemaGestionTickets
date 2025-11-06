@@ -17,12 +17,9 @@ Menú de Opciones
 7. Finalizar Atencion || Al finalizar la atencion se permiten lo siguiente:
     Seleccione el estado final del ticket:
     1. Completado - Ticket finalizado exitosamente
-    2. Pendiente - El ticket quedó incompleto o falta documentación -> Si el ticket es marcado como pendiente será dirigido a la cola de tickets pendientes
-       Ticket marcado como PENDIENTE. Se lo enviará a la cola de pendientes.
-       Ticket #005CI: 1234123412|fe|fr| * Urgente| Estado: Pendiente_DOCS
-       Notas registradas:
-       1. Documentos incompletos
-  
+    2. Pendiente - El ticket quedó incompleto o falta documentación -> Si el ticket es marcado como pendiente será dirigido a la cola de tickets pendientes y se podran visualizar
+       las notas registradas
+       
 8. Ver tickets en espera || Permite visualizar los tickets urgentes y normales que estan esperando atención
 9. Ver historial de ticket actual || Permite visualizar las notas que tiene el ticket en atención
 10. Buscar ticket || Muestra una lista de los tickets donde se puede ver informacion detallada del ticket seleccionado , ademas de tener dos opciones:
