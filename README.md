@@ -2,7 +2,7 @@
 
 # SIstemaGestionTickets
 
-Descargar y usar el JDK 24-25
+Descargar y usar el JDK 24-25 para una ejecución adecuada del proyecto
 
 Desarrollar un módulo de consola robusto y reproducible que persista datos entre ejecuciones, aplique un catálogo de estados con transiciones
 válidas, genere consultas/reportes útiles y soporte atención prioritaria (cola de urgentes), integrando SLL, Stack y Queue.
