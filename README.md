@@ -34,9 +34,11 @@ Menú de Opciones
 
         1. Ver notas - Visualización de todas las notas del tickets
 
-        2. Eliminar ticket 
+        2. Eliminar ticket
 
-11. Consultar tickets por estado
+        3. Volver al menu principal
+
+12. Consultar tickets por estado
          Seleccione el estado:
     
           1. En Espera
@@ -49,7 +51,7 @@ Menú de Opciones
 
           5. Completado
     
-12. Ver tickets pendientes || Muestra una lista de los tickets pendientes
+13. Ver tickets pendientes || Muestra una lista de los tickets pendientes
 
 
      0.Salir
