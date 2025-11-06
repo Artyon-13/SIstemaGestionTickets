@@ -51,7 +51,7 @@ public class GestorTickets {
 
         do {
             //Interfaz del Usuario principal
-            System.out.println("*********************************");
+            System.out.println("-----------------------------------------");
             System.out.println(PURPLE + "-----Modulo de Atencion CAE----" + RESET);
             System.out.println("1. Nuevo Ticket");
             System.out.println("2. Atender siguiente ticket");
@@ -66,7 +66,7 @@ public class GestorTickets {
             System.out.println("11. Consultar tickets por estado");
             System.out.println("12. Ver tickets pendientes");
             System.out.println("0. Salir");
-            opcion = pedirOpcionMenu();
+            opcion = pedirOpcionMenu(12,0);
 
             //Ejecuta una accion dependiendo de la opcion que seleccionen
             switch (opcion) {
@@ -79,7 +79,7 @@ public class GestorTickets {
                 case 7 -> finalizarAtencion();
                 case 8 -> listarTicketsAgregados();
                 case 9 -> verHistorial();
-                case 10 -> buscarTicket();
+                case 10 -> historialTickets();
                 case 11 -> consultarPorEstado();
                 case 12 -> verPendientes();
                 case 0 -> { System.out.println("Gracias por usar el modulo de atencion CAE"); System.out.println("Adios..."); System.exit(0);
@@ -91,27 +91,27 @@ public class GestorTickets {
     }
 
     // Solicita y valida una opción de menu (0-10)
-    private int pedirOpcionMenu() {
+    private int pedirOpcionMenu(int opmax, int opmin) {
         while (true) {
-            System.out.print("Opcion (0-12): ");
+            System.out.print("Opcion (" + opmin + " - " + opmax+ "): ");
             String linea = scanner.nextLine();
             if (linea == null) {
-                System.out.println(RED + "Entrada inválida: ingrese un número entre 0 y 12." + RESET);
+                System.out.println(RED + "Entrada inválida: ingrese un número entre " + opmin + " y " + opmax + RESET);
                 continue;
             }
             linea = linea.trim();
             // Solo dígitos (rechaza letras, símbolos, decimales con punto/coma, signos)
             if (!linea.matches("\\d+")) {
-                System.out.println(RED + "Entrada inválida: solo se permiten dígitos (0-12)." + RESET);
+                System.out.println(RED + "Entrada inválida: solo se permiten dígitos" + RESET);
                 continue;
             }
 
             try {
                 int opt = Integer.parseInt(linea);
-                if (opt >= 0 && opt <= 12) {
+                if (opt >= opmin && opt <= opmax) {
                     return opt;
                 } else {
-                    System.out.println(RED + "Opción inválida: debe estar entre 0 y 12." + RESET);
+                    System.out.println(RED + "Opción inválida: debe estar entre " + opmin + " y " + opmax + RESET);
                 }
             } catch (NumberFormatException e) {
 
@@ -267,12 +267,6 @@ public class GestorTickets {
                 System.out.println(RED + "Error: La cédula debe tener exactamente 10 dígitos." + RESET);
                 continue;
             }
-/*
-            if (existeTikectActivo(cedula)) {
-                System.out.println(RED + "Error: Usted cuenta con un ticket en espera." + RESET);
-                continue;
-            }
-            */
 
             return cedula;
         }
@@ -538,46 +532,54 @@ public class GestorTickets {
         enAtencion.notas.listarConNumeros();
     }
 
-    //Busca un ticket por su id 
-    private void buscarTicket(){
+    //Historial de todos los tickets
+    private void historialTickets(){
         int opcion;
-        System.out.println("\n:::::::::::::::::::::::::::::::::::::::::::::::::::");
-        System.out.println(CYAN +"-------Lista de tickets registrados-------"+ RESET);
-        for (Ticket ticket : historial) {
-            ticket.mostrarInfo();
-        }
-        System.out.print("Numero de ticket para visualizar: ");
-        int numeroTicket = scanner.nextInt();
-        scanner.nextLine();
-        // Busca de forma lineal en el historial
-        for (Ticket ticket : historial) {
-            if (ticket.id == numeroTicket) {
+
+        if (historial.isEmpty()) {
+            System.out.println(CYAN +"------- Lista de tickets vacia -------"+ RESET);
+            return;
+        } else {
+            System.out.println(CYAN + "------ Lista de tickets registrados ------" + RESET);
+            for (Ticket ticket : historial) {
                 ticket.mostrarInfo();
-                System.out.println("------ Elija una opcion ------ ");
-                System.out.println("1. Ver notas");
-                System.out.println("2. Eliminar ticket");
-                System.out.print("Opcion (1-2): ");
-                opcion = scanner.nextInt();
-                scanner.nextLine();
-                if (opcion == 1) {
-                    System.out.println(BLUE +"Notas registradas:"+ RESET);
-                    ticket.notas.listarConNumeros();
-                    return;
-                } else if (opcion == 2) {
-                    historial.remove(ticket);
-                    undo.limpiar();
-                    redo.limpiar();
-                    cola.eliminarTicket(numeroTicket);
-                    guardarTicketsCSV(historial, ARCHIVO_CSV);
-                    guardarNotasCSV(historial, "notas.csv");
-                    System.out.println(CYAN +"Ticket eliminado correctamente"+ RESET);
+            }
+            System.out.print("Ingrese el numero de ticket para ver mas opciones: ");
+            int numeroTicket = scanner.nextInt();
+            scanner.nextLine();
+            // Busca de forma lineal en el historial
+            for (Ticket ticket : historial) {
+                if (ticket.id == numeroTicket) {
+                    ticket.mostrarInfo();
+                    System.out.println("------ Elija una opcion ------ ");
+                    System.out.println("1. Ver notas");
+                    System.out.println("2. Eliminar ticket");
+                    System.out.println("3. Volver al menu principal");
+                    opcion = pedirOpcionMenu(3, 1);
+
+                    if (opcion == 1) {
+                        System.out.println(BLUE + "--------- Notas registradas -----------" + RESET);
+                        ticket.notas.listarConNumeros();
+                        return;
+                    } else if (opcion == 2) {
+                        historial.remove(ticket);
+                        undo.limpiar();
+                        redo.limpiar();
+                        cola.eliminarTicket(numeroTicket);
+                        guardarTicketsCSV(historial, ARCHIVO_CSV);
+                        guardarNotasCSV(historial, "notas.csv");
+                        System.out.println(CYAN + "!------ Ticket eliminado correctamente ------!" + RESET);
+                        return;
+                    } else if (opcion == 3) {
+                        menu();
+                    }
                     return;
                 }
-                return;
             }
-        }
-        System.out.println(CYAN +"Ticket no encontrado"+ RESET);
 
+        }
+        System.out.println("Error: Ingrese un numero de ticket de la lista.");
+        historialTickets();
     }
 
     // Verifica si existe un ticket con la cedula que ingreso
