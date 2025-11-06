@@ -38,7 +38,9 @@ public class ColaTickets {
         System.out.println("Tickets en espera:");
         System.out.println("----------------------------------");
         while (actual != null){
-            actual.ticket.mostrarInfo();
+
+            System.out.print("Ticket #" + String.format("%02d", actual.ticket.numeroEnCola));
+            System.out.println(" CI: " + actual.ticket.cedula + " | " + actual.ticket.estudiante + " | " + actual.ticket.tipoTramite + " | Estado: " + actual.ticket.estado);
             actual = actual.siguiente;
         }
     }
