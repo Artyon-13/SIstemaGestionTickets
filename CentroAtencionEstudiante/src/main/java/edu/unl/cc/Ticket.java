@@ -5,28 +5,32 @@ public class Ticket {
     String estudiante;
     String cedula;
     String tipoTramite;
+    boolean fueReencolado;
+    int numeroEnCola;
     EstadoTicket estado;
     ListaNotas notas;
+    public boolean esUrgente;
 //Creamos un constructor y un metodo para que muestre la informacion
-    public Ticket(int id, String estudiante, String cedula, String tipoTramite) {
+    public Ticket(int id, String estudiante, String cedula, String tipoTramite, boolean esUrgente) {
         this.id = id;
         this.estudiante = estudiante;
         this.cedula = cedula;
         this.tipoTramite = tipoTramite;
         this.estado = EstadoTicket.En_Cola;
         this.notas = new ListaNotas();
-
+        this.esUrgente = esUrgente;
+        this.fueReencolado = false;
+        this.numeroEnCola = 0;
 
     }
 
     public int getId() {
         return id;
     }
-
     public void mostrarInfo() {
-        System.out.println("Ticket #" + id + "CI: " + cedula + "|" + estudiante + "|" + tipoTramite + "| Estado: " + estado);
+        String tipo = esUrgente ? "Urgente" : "Normal";
+        System.out.println("Ticket #" + String.format("%02d", numeroEnCola) + id + "CI: " + cedula + "|" + estudiante + "|" + tipoTramite + "| * " + tipo + "| Estado: " + estado);
     }
-
 
 }
 

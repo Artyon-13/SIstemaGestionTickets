@@ -1,5 +1,3 @@
-id,estudiante,cedula,tipoTramite,estado
-1,juan,1234567891,cambio de cedula,Completado
-2,alvaro,1234567899,mantenimientode computador,Completado
-4,Anthony Yaguana,1150585386,Matricula,Completado
-5,Darwin,1234567890,adada,Completado
+id,estudiante,cedula,tipoTramite,estado,esUrgente
+1,fe,1234567890,tr,Pendiente_DOCS,false
+2,re,1234567891,v,En_Cola,false
