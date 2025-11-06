@@ -3,9 +3,13 @@ package edu.unl.cc;
 public class ColaTickets {
     public NodoCola frente;
     private NodoCola fin;
+
+
     public boolean esVacia() {
         return frente == null;
     }
+
+
     public void insertar(Ticket ticket) {
         NodoCola nuevo = new NodoCola(ticket);
         if (esVacia()) {
@@ -27,20 +31,13 @@ public class ColaTickets {
 
     public void listar (){
         if (esVacia()) {
-            System.out.println("----------------------------------");
             System.out.println("No existen tickets en espera");
-            System.out.println("----------------------------------");
             return;
         }
-
         NodoCola actual = frente;
-        System.out.println("----------------------------------");
         System.out.println("Tickets en espera:");
-        System.out.println("----------------------------------");
         while (actual != null){
-
-            System.out.print("Ticket #" + String.format("%02d", actual.ticket.numeroEnCola));
-            System.out.println(" CI: " + actual.ticket.cedula + " | " + actual.ticket.estudiante + " | " + actual.ticket.tipoTramite + " | Estado: " + actual.ticket.estado);
+            actual.ticket.mostrarInfo();
             actual = actual.siguiente;
         }
     }

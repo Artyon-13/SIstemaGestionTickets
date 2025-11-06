@@ -51,18 +51,18 @@ public class GestorTickets {
 
         do {
             //Interfaz del Usuario principal
-            System.out.println("*****************");
+            System.out.println("*********************************");
             System.out.println(PURPLE + "-----Modulo de Atencion CAE----" + RESET);
             System.out.println("1. Nuevo Ticket");
-            System.out.println("2. Atender siguiente");
+            System.out.println("2. Atender siguiente ticket");
             System.out.println("3. Agregar Nota");
             System.out.println("4. Eliminar Nota");
             System.out.println("5. Deshacer ultimo cambio");
             System.out.println("6. Rehacer ultimo cambio");
             System.out.println("7. Finalizar Atencion");
-            System.out.println("8. Ver tickets en espera");
-            System.out.println("9. Ver historial de ticket actual");
-            System.out.println("10. Buscar ticket");
+            System.out.println("8. Ver tickets en la cola");
+            System.out.println("9. Ver historial de notas del ticket actual");
+            System.out.println("10. Historial de tickets");
             System.out.println("11. Consultar tickets por estado");
             System.out.println("12. Ver tickets pendientes");
             System.out.println("0. Salir");
@@ -135,14 +135,11 @@ public class GestorTickets {
             }
             return;
         }
-
-        System.out.println("\n===================================================");
         System.out.print(GREEN +"Tipo de Tramite: " + RESET);
         String tipoTramite = scanner.nextLine();
         System.out.print("\n");
         System.out.println("¿El ticket es urgente? (s/n):   ");
         boolean esUrgente = scanner.nextLine().trim().equalsIgnoreCase("s");
-
         System.out.println("\n===================================================");
         Ticket ticket = new Ticket(id++, nombre, cedula, tipoTramite, esUrgente);
         historial.add(ticket); // Guardamos también en la lista persistente
@@ -159,7 +156,7 @@ public class GestorTickets {
 
     // Atiende el siguiente ticket de la cola
     private void atenderTicket() {
-        System.out.println("\n:::::::::::::::::::::::::::::::::::::::::::::::::::");
+        System.out.println("\n:::::::::::::::::::::::::::::::::::::::::::::::::::::::");
         if (enAtencion != null) {
             System.out.println(CYAN + "Ya hay un ticket en atención. Finalice la atención actual primero." + RESET);
             return;
@@ -168,20 +165,17 @@ public class GestorTickets {
         // Prioridad 1: Atender ticket urgente
         if (!colaUrgente.esVacia()) {
             enAtencion = colaUrgente.sacar();
-            System.out.println(RED + "\n Atendiendo ticket urgente" + RESET);
-            System.out.println(".....................................................");
+            System.out.println(RED + "------ Atendiendo ticket urgente ------" + RESET);
         }
         // Prioridad 2: Si no hay urgentes, atender ticket normal
         else if (!cola.esVacia()) {
             enAtencion = cola.sacar();
-            System.out.println(CYAN + "\nAtendiendo ticket normal" + RESET);
-            System.out.println(".....................................................");
+            System.out.println(CYAN + "------ Atendiendo ticket normal ------" + RESET);
         }
         // Prioridad 3: Si no hay normales, atender ticket pendiente
         else if (!colaPendientes.esVacia()) {
             enAtencion = colaPendientes.sacar();
-            System.out.println(YELLOW + "\nAtendiendo ticket pendiente" + RESET);
-            System.out.println(".....................................................");
+            System.out.println(YELLOW + "------ Atendiendo ticket pendiente -----" + RESET);
         }
 
         // Si no hay tickets en ninguna cola
@@ -196,7 +190,6 @@ public class GestorTickets {
         redo.limpiar();
 
         // Mostrar ticket en atención
-        System.out.println(CYAN + "Atendiendo ticket:" + RESET);
         enAtencion.mostrarInfo();
     }
 
@@ -310,6 +303,7 @@ public class GestorTickets {
             redo.push("Elimino nota: " + texto);
             System.out.println(BLUE +"Se deshizo correctamente la eliminacion de la nota"+ RESET);
         }
+        guardarNotasCSV(historial, "notas.csv");
     }
 
     public void rehacer (){
@@ -335,6 +329,7 @@ public class GestorTickets {
             undo.push("Elimino nota: " + texto);
             System.out.println(BLUE +"Se rehizo correctamente la eliminacion de la nota"+ RESET);
         }
+        guardarNotasCSV(historial, "notas.csv");
     }
 
     // Finaliza la atención del ticket actual y limpia las pilas de acciones
@@ -478,7 +473,7 @@ public class GestorTickets {
 
                 // Reencolar en la cola normal
                 cola.insertar(ticket);
-                System.out.println(GREEN + " Ticket reencolado como #" + String.format("%02d", ticket.numeroEnCola) + RESET);
+                System.out.println(GREEN + " Ticket reencolado correctamente" + RESET);
                 return;
             }
             anterior = actual;
@@ -573,6 +568,8 @@ public class GestorTickets {
                     undo.limpiar();
                     redo.limpiar();
                     cola.eliminarTicket(numeroTicket);
+                    guardarTicketsCSV(historial, ARCHIVO_CSV);
+                    guardarNotasCSV(historial, "notas.csv");
                     System.out.println(CYAN +"Ticket eliminado correctamente"+ RESET);
                     return;
                 }
@@ -736,11 +733,9 @@ public class GestorTickets {
         }
     }
     public void listarTicketsAgregados() {
-        System.out.println("Tickets Urgentes");
-        System.out.println(".....................................................");
+        System.out.println("=============== Tickets Urgentes ==================");
         colaUrgente.listar();
-        System.out.println("Tickets Normales");
-        System.out.println(".....................................................");
+        System.out.println("=============== Tickets Normales ==================");
         cola.listar();
     }
 

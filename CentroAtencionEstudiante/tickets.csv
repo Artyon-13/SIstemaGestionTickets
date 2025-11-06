@@ -1,3 +1,5 @@
 id,estudiante,cedula,tipoTramite,estado,esUrgente
-1,fe,1234567890,tr,Pendiente_DOCS,false
-2,re,1234567891,v,En_Cola,false
+1,Anthony,1150585386,adad,Completado,true
+2,Daniela,0987908798,adad,En_Cola,false
+3,Darwin,1234567890,Matricula,En_Cola,true
+4,Cristian,0987654321,Matricula,En_Cola,false
