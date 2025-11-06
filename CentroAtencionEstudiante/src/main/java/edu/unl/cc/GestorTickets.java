@@ -356,6 +356,8 @@ public class GestorTickets {
                     undo.limpiar();
                     redo.limpiar();
                     cola.eliminarTicket(numeroTicket);
+                    guardarTicketsCSV(historial, ARCHIVO_CSV);
+                    guardarNotasCSV(historial, "notas.csv");
                     System.out.println(CYAN +"Ticket eliminado correctamente"+ RESET);
                     return;
                 }
