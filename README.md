@@ -24,7 +24,7 @@ Menú de Opciones
        
 9. Ver tickets en espera || Permite visualizar los tickets urgentes y normales que estan esperando atención
 
-10. Ver historial de ticket actual || Permite visualizar las notas que tiene el ticket en atención
+10. Historial de tickets || Permite visualizar las notas que tiene el ticket en atención
 
 11. Buscar ticket || Muestra una lista de los tickets donde se puede ver informacion detallada del ticket seleccionado , ademas de tener dos opciones:
 
