@@ -29,7 +29,7 @@ public class Ticket {
     }
     public void mostrarInfo() {
         String tipo = esUrgente ? "Urgente" : "Normal";
-        System.out.println("Ticket #" + String.format("%02d", numeroEnCola) + id + "CI: " + cedula + "|" + estudiante + "|" + tipoTramite + "| * " + tipo + "| Estado: " + estado);
+        System.out.println("Ticket #" + id + "| CI: " + cedula + "| Nombre: " + estudiante + "|Tramite: " + tipoTramite + "| Tipo: " + tipo + "| Estado: " + estado);
     }
 
 }
